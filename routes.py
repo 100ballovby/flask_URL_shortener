@@ -85,14 +85,15 @@ def redirect_to(short_url):
     return redirect(url.original_url)
 
 
-@app.route('/update-url/<short_url>', methods=['GET', 'POST'])
-@login_required
-def update_url(short_url):
+@app.route('/update-url/<short_url>', methods=['GET', 'POST'])  # mysite.com/update/4 <- мы обвноялем конкретный элемент из базы данных по id
+def update_student(short_url):
     url = Url.query.filter_by(short_url=short_url).first_or_404()
     form = UpdateUrlForm()
-    if form.validate_on_submit():
-        # TODO: Починить перенаправление на главную страницу
-        return None
-    elif request.method == 'GET':  # если на страницу просто зашли
-        form.url.data = url.short_url  # вписываю в поле URL текущее значение сокращенной ссылки
-    return render_template('update_url.html', form=form)
+    if form.validate_on_submit():  # когда форма отправляется
+        url.short_url = form.url.data  # изменить старое имя студента на значение из поля name формы
+        try:
+            db.session.commit()  # обновляю данные в базе
+        except:
+            return 'There was a problem updating data.'
+        return redirect(url_for('index'))
+    return render_template('update_url.html', form=form, url=url)

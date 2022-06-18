@@ -3,9 +3,10 @@
 {% block content %}
     <h1 class="text-center">Обновить короткую ссылку</h1>
     <form action="" class="form" method="post">
+    {{ form.hidden_tag() }}
         <div class="mb-3">
             {{ form.url.label(class="form-label") }}
-            {{ form.url(class="form-control") }}
+            {{ form.url(class="form-control", value=url.short_url) }}
         </div>
         <div class="mb-3">
             {{ form.submit(class="btn btn-primary") }}
