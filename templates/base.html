@@ -16,7 +16,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{{ url_for('index') }}">MiniBlog</a>
+        <a class="navbar-brand" href="{{ url_for('index') }}">URL Shortener</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -39,10 +39,10 @@
     </div>
 </nav>
 
-{% with messages = get_flashed_messages() %} <!-- собираю сообщения -->
+{% with messages = get_flashed_messages(with_categories=True) %} <!-- собираю сообщения -->
     {% if messages %} <!-- если удалось что-то собрать -->
-         {% for message in messages %}
-             <p>{{ message }}</p>
+         {% for category, message in messages %}
+             <div class="alert alert-{{ category }} my-1">{{ message }}</div>
          {% endfor %}
     {% endif %}
 {% endwith %}

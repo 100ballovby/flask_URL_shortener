@@ -18,7 +18,7 @@ def index():
         url = request.form['url']  # сохраняю урл из формы в переменную
         url_id = urls[-1].id + 1  # id самой последней ссылки в БД + 1
         if not url:  # если поле передали пустым
-            flash('The URL is required!')
+            flash('Нужна ссылка!', 'warning')
             return redirect(url_for('index'))
         hash_link = hashid.encode(url_id)
         new_url = Url(
@@ -28,7 +28,8 @@ def index():
         )
         db.session.add(new_url)
         db.session.commit()
-        return render_template('index.html')
+        flash(f'URL successfully shortened: {request.host_url}{hash_link}', 'success')
+        return redirect(url_for('index'))
     return render_template('index.html')
 
 
@@ -43,6 +44,7 @@ def login():
             # если пользователь не найден в БД или пароль не совпал
             return redirect(url_for('login'))  # вернуть пользователя на страницу входа
         login_user(user, remember=form.remember_me.data)
+        flash('Logged in!', 'info')
         return redirect(url_for('index'))
     return render_template('login.html', title='Login page', form=form)
 
@@ -71,7 +73,7 @@ def register():
             db.session.commit()  # сохранить пользователя в БД
             return redirect(url_for('login'))  # перенаправить на страницу входа
         except ValidationError:
-            flash('Пользователь с такими данными уже существует!')
+            flash('Username or email already exists!', 'danger')
             return redirect(url_for('register'))
     return render_template('register.html', form=form)
 
@@ -102,5 +104,6 @@ def update_url(short_url):
             db.session.commit()  # обновляю данные в базе
         except:
             return 'There was a problem updating data.'
+        flash(f'URL successfully changed: {request.host_url}{url.short_url}', 'success')
         return redirect(url_for('index'))
     return render_template('update_url.html', form=form, url=url)
