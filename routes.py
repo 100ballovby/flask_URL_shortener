@@ -86,7 +86,7 @@ def redirect_to(short_url):
 
 
 @app.route('/update-url/<short_url>', methods=['GET', 'POST'])  # mysite.com/update/4 <- мы обвноялем конкретный элемент из базы данных по id
-def update_student(short_url):
+def update_url(short_url):
     url = Url.query.filter_by(short_url=short_url).first_or_404()
     form = UpdateUrlForm()
     if form.validate_on_submit():  # когда форма отправляется
